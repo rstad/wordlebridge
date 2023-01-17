@@ -86,14 +86,14 @@ async def on_message(message):
             except discord.errors.Forbidden:
                 pass
         else: # not DM
-            if message.channel.id == "692795745409171589": #rt2a general
-                try:
-                    await fmh_wordle.send(formatted_message)
-                except discord.errors.Forbidden:
-                    pass
-            elif message.channel.id == "1064641280791019623": #fmh wordle
+            if message.channel.id == 1064641280791019623: #fmh wordle
                 try:
                     await rta_general.send(formatted_message)
+                except discord.errors.Forbidden:
+                    pass
+            if message.channel.id == 692795745409171589: #rt2a general
+                try:
+                    await fmh_wordle.send(formatted_message)
                 except discord.errors.Forbidden:
                     pass
     else:
