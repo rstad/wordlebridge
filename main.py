@@ -122,6 +122,35 @@ def is_wordle_message(message):
     else:
         return False
 
+cnx_msg_rex = re.compile(r'Connections *\nPuzzle #\d+\n')
+def is_connections_message(message):
+    return bool(re.search(cnx_msg_rex, message.content))
+
+cnx_line_rex = re.compile(r'^[🟨🟩🟦🟪]{4}$')
+def connections_score(message):
+    scores = {
+        '🟨🟨🟨🟨': 1,
+        '🟩🟩🟩🟩': 2,
+        '🟦🟦🟦🟦': 3,
+        '🟪🟪🟪🟪': 4,
+    }
+    lines = message.content.split('\n')
+    line_val = 4
+    score = 0
+    for line in lines:
+        if cnx_line_rex.match(line):
+            score += scores.get(line, 0) * line_val
+            line_val = max(0, line_val - 1)
+    return score
+
+def connections_message(score):
+    message = f'You scored {score} out of 30.'
+    if score == 30:
+        message += ' Perfect!\n\n:partying_face: :tada:'
+    elif score == 0:
+        message += '\n\n ...\n\n:people_hugging:'
+    return message
+
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
@@ -158,6 +187,14 @@ async def on_message(message):
                     await fmh_wordle.send(get_server_nick(rta_guild,message.author)+" "+formatted_message)
                 except discord.errors.Forbidden:
                     pass
+    elif is_connections_message(message):
+        if message.channel and message.channel.id == 692795745409171589:  # rt2a general
+            try:
+                score = connections_score(message)
+                score_msg = connections_message(score)
+                await message.channel.send(score_msg)
+            except discord.errors.Forbidden:
+                pass
     else:
         print("not wordle message")
         pass
