@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-rex = re.compile(r'Wordle [0-9]{3,}')
+rex = re.compile(r'Wordle [0-9,]{3,}')
 botrex = re.compile(r'WordleBot\nSkill')
 fivegreens = "🟩🟩🟩🟩🟩"
 padline = "❌❌❌❌❌"
